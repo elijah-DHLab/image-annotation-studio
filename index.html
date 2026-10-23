@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="כלי מקומי לסימון תמונות, קישור למונחים, תיעוד קשרים וניתוח רשת מחקרית.">
-  <title>מעבדת אליהו — כלי סימון תמונה V1.6</title>
+  <title>מעבדת אליהו — כלי סימון תמונה V1.7</title>
   <style>
     :root{--ink:#18323a;--muted:#667a80;--line:#d7e1e3;--paper:#f3f7f7;--white:#fff;--blue:#176578;--blue2:#e8f4f6;--gold:#9fbf37;--coral:#d24f4a;--red:#a43f3f;--green:#24705b;--shadow:0 9px 28px #12394212;--radius:14px}
     *{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#eef5f5 0,#f8faf9 360px);color:var(--ink);font-family:Arial,"Noto Sans Hebrew",sans-serif;font-size:15px;line-height:1.45}button,input,select,textarea{font:inherit}button{cursor:pointer}a{color:var(--blue)}
@@ -49,12 +49,14 @@
     @media(max-width:760px){.brand p{display:none}.brand-logo{width:220px}.layout{display:flex}.image-stage{height:60vh}.zoom-controls{order:3}.workspace-context{flex-wrap:wrap}.network-grid{display:flex}.setup-mode .layout{margin:8px auto}}
     /* V1.6 — a mark and its side tag share one visual identity. */
     .current-mark{flex:0 0 auto;border:1px solid #c6d8d2;border-inline-start:4px solid var(--blue);border-radius:8px;padding:7px 9px;background:#f4f8f5;font-size:12px;line-height:1.4}.current-mark b{display:block}.current-mark small{display:block;color:var(--muted);font-size:11px;margin-top:2px}.current-mark.has-selection{background:#fff5f0;border-color:#e6c3af;border-inline-start-color:#bf5639}.mark-register{flex:0 0 auto;min-height:0;display:none}.mark-register.has-marks{display:flex;flex-direction:column;gap:4px}.mark-register-heading{font-size:11px;font-weight:800;color:#405d5d;display:flex;justify-content:space-between}.mark-register-list{max-height:min(18vh,132px);overflow:auto;display:grid;gap:3px;overscroll-behavior:contain}.mark-row{width:100%;display:flex;gap:7px;align-items:center;text-align:start;padding:6px;border:1px solid #dde5df;border-radius:7px;background:#fff;color:var(--ink);min-height:45px}.mark-row:hover,.mark-row.is-hovered{background:#eaf4ee;border-color:#528e84}.mark-row.active{border:2px solid #bd573d;background:#fff1e9;padding:5px}.mark-number{display:inline-grid;place-items:center;flex:0 0 26px;width:26px;height:26px;border-radius:7px;background:#145d68;color:#fff;font-weight:800;font-size:11px;direction:ltr}.mark-row.active .mark-number{background:#b84e36}.mark-copy{min-width:0;flex:1}.mark-copy b{display:block;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mark-copy small{display:block;font-size:10px;color:#576e6b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.mark-row .mark-count{font-size:10px;color:#4a6662;white-space:nowrap}.term-palette{min-height:72px}.selected-term{line-height:1.35}.selected-term b{font-size:12px}.editor-box{max-height:120px}.media-frame svg [data-ann]{cursor:pointer}.media-frame svg [data-ann] .annotation-shape{transition:stroke-width .14s,fill-opacity .14s}.media-frame svg [data-ann].is-hovered .annotation-shape{stroke:#e8a72e;stroke-width:9;fill-opacity:.32}.media-frame svg [data-ann].is-selected .annotation-shape{stroke:#bb5037;stroke-width:9;filter:drop-shadow(0 0 4px #fff)}.media-frame svg .annotation-label{paint-order:stroke;stroke:#fff;stroke-width:4;stroke-linejoin:round;pointer-events:none;font-weight:800}.media-frame svg .annotation-number{pointer-events:none}.media-frame svg [data-ann].is-hovered .annotation-number circle{fill:#b17d14}.media-frame svg [data-ann].is-selected .annotation-number circle{fill:#bb5037}.about-content{max-width:820px;margin:0 auto;padding:6px 3px;overflow:auto;height:100%}.about-content h2{margin:0 0 12px;font-size:20px}.about-grid{display:grid;gap:10px;grid-template-columns:repeat(3,minmax(0,1fr))}.about-card{padding:15px;border:1px solid var(--line);border-radius:9px;background:var(--white)}.about-card b{color:var(--blue)}.about-card p{font-size:13px;line-height:1.6;margin:7px 0 0}.about-note{margin-top:12px;background:#edf3ef;border-radius:8px;padding:12px;line-height:1.6;font-size:13px}
-    @media(max-width:760px){.mark-register-list{max-height:205px}.about-grid{grid-template-columns:1fr}.editor-box{max-height:200px}}
+    /* Detailed bilingual guide: occurrence → term → concept → cataloguing decision. */
+    .about-content{max-width:1050px;padding:8px 4px 26px}.about-content h2{margin:0 0 5px;font-size:21px}.about-lead{font-size:14px;line-height:1.65;color:#496164;margin:0 0 14px;max-width:880px}.ontology-flow{display:grid;grid-template-columns:1fr 34px 1fr 34px 1fr;align-items:stretch;margin:0 0 16px}.flow-arrow{display:grid;place-items:center;color:#78918c;font-size:22px;font-weight:700}.flow-arrow:before{content:"←"}html[dir="ltr"] .flow-arrow:before{content:"→"}.ontology-step{padding:14px 14px 13px;border:1px solid var(--line);border-top:4px solid var(--blue);border-radius:9px;background:var(--white)}.ontology-step.term{border-top-color:var(--gold)}.ontology-step.concept{border-top-color:var(--coral)}.ontology-step h3{margin:0 0 6px;font-size:14px}.ontology-step p,.about-card p,.about-section>p{font-size:13px;line-height:1.62;margin:0;color:#425b5f}.about-section{margin-top:12px;padding-top:12px;border-top:1px solid var(--line)}.about-section>h3{font-size:16px;margin:0 0 8px}.about-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.about-card{padding:13px 14px}.about-card h3{color:var(--blue);font-size:13px;margin:0 0 5px}.about-card.decision{border-inline-start:4px solid var(--gold)}.about-card.warning-card{border-inline-start:4px solid var(--coral)}.about-note{padding:12px 14px;border-inline-start:4px solid var(--blue)}.about-note p{line-height:1.62;font-size:13px;margin:0}.catalog-sequence{counter-reset:catalog;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.catalog-step{counter-increment:catalog;padding:12px;border:1px solid var(--line);border-radius:8px;background:#fff}.catalog-step:before{content:counter(catalog);display:grid;place-items:center;width:23px;height:23px;border-radius:50%;background:var(--blue);color:#fff;font-size:11px;font-weight:800;margin-bottom:7px}.catalog-step h3{font-size:12px;margin:0 0 4px}.catalog-step p{font-size:12px;line-height:1.55;color:#4b6466;margin:0}
+    @media(max-width:760px){.mark-register-list{max-height:205px}.about-grid,.catalog-sequence{grid-template-columns:1fr}.ontology-flow{grid-template-columns:1fr}.flow-arrow{height:27px}.flow-arrow:before{content:"↓"!important}.editor-box{max-height:200px}}
   </style>
 </head>
 <body>
   <header>
-    <div class="brand"><img class="brand-logo" src="elijah-lab-logo-wide.jpg" alt="לוגו מעבדת אליהו | e-Lijah lab"><div><h1><span id="appTitle">כלי סימון תמונה</span> <span class="version-badge">V1.6</span></h1><p>מרחב עבודה לתמונה מחקרית אחת</p></div></div>
+    <div class="brand"><img class="brand-logo" src="elijah-lab-logo-wide.jpg" alt="לוגו מעבדת אליהו | e-Lijah lab"><div><h1><span id="appTitle">כלי סימון תמונה</span> <span class="version-badge">V1.7</span></h1><p>מרחב עבודה לתמונה מחקרית אחת</p></div></div>
     <div class="head-actions">
       <div class="language-switch" role="group" aria-label="שפת ממשק | Interface language"><button type="button" data-language="he" class="active">עברית</button><button type="button" data-language="en">English</button></div>
       <button class="btn" id="openProject">פתיחת פרויקט | Open project</button>
@@ -123,7 +125,99 @@
       <section class="panel data-panel"><h2>כלל הנתונים | Complete data</h2><div class="panel-body"><div class="data-tabs"><button class="btn small data-subtab active" data-data-table="canonical">CSV מלא | Canonical CSV</button><button class="btn small data-subtab" data-data-table="nodes">צמתים | Nodes</button><button class="btn small data-subtab" data-data-table="edges">קשתות | Edges</button></div><div class="table-wrap" id="dataTableWrap"></div></div></section>
       <section class="panel history-panel"><h2>היסטוריית גרסאות | Version history</h2><div class="panel-body"><div class="subtle" style="margin-bottom:9px">כל שינוי נשמר אוטומטית עם תאריך ומצב נתונים.</div><div class="version-list" id="versionList"><div class="subtle">גרסה ראשונה תיווצר עם תחילת העבודה.</div></div></div></section>
     </section>
-    <section id="aboutView" class="app-view"><div class="about-content"><h2>איך קוראים את התיוג | How to read the annotation</h2><div class="about-grid"><div class="about-card"><b>סימון בתמונה | Image mark</b><p>כל נקודה או אזור הם מופע מסוים בתמונה. המספר על התמונה זהה למספר שלצד התג, גם אם אותו מונח מופיע כמה פעמים. | Each point or area is a specific occurrence in the image. Its number matches the side tag, even if a term occurs more than once.</p></div><div class="about-card"><b>מונח ומושג | Term and concept</b><p>המונח הוא התג שנבחר מהגיליון. אם קיים מזהה מושג, מוצג שיוך למושג; אחרת מוצג ״מונח בלבד״. | The term comes from the register. A concept ID indicates a concept link; otherwise the mark shows “term only.”</p></div><div class="about-card"><b>קשרים בין מופעים | Relations between occurrences</b><p>מספר הקשרים מתייחס לטענות בין סימונים בתמונה. אפס קשרים אינו מבטל את שיוך המונח או המושג. | The relation count describes assertions between image marks. Zero relations does not undo a term or concept link.</p></div></div><div class="about-note">הרשימה בצד משקפת את הסימונים בתמונה הפעילה. מעבר עכבר או בחירה מדגישים את אותו מופע בשני המקומות; מונח שנבחר ברשימה התחתונה ישמש לסימון הבא. | The side register shows marks on the active image. Hovering or selecting highlights the same occurrence in both places; the term selected below is used for the next mark.</div></div></section>
+    <section id="aboutView" class="app-view">
+      <div class="about-content">
+        <h2>מופע, מונח ומושג: איך הקטלוג עובד | Occurrence, term and concept: how cataloguing works</h2>
+        <p class="about-lead">המערכת מפרידה בין הדבר שנראה בתמונה, המילה המשמשת לתיאורו, והמשמעות המחקרית שאליה המילה מפנה. ההפרדה מאפשרת קטלוג עקבי גם בין שפות, איותים ותקופות שונות. | The system separates the thing visible in the image, the word used to describe it, and the scholarly meaning to which that word refers. This supports consistent cataloguing across languages, spellings, and periods.</p>
+
+        <div class="ontology-flow" aria-label="מופע, מונח ומושג | Occurrence, term and concept">
+          <div class="ontology-step occurrence">
+            <h3>מופע בתמונה | Occurrence in the image</h3>
+            <p>נקודה או אזור מסוים בתמונה הנוכחית. לכל מופע יש מזהה ומיקום משלו, גם כאשר כמה מופעים מקבלים אותו מונח. | A specific point or area in the current image. Each occurrence has its own identifier and geometry, even when several occurrences use the same term.</p>
+          </div>
+          <span class="flow-arrow" aria-hidden="true"></span>
+          <div class="ontology-step term">
+            <h3>מונח | Term</h3>
+            <p>התווית הלשונית שהמתייג בוחר מן הרשימה המבוקרת. למונח יש מזהה, שפה, נוסח ומעמד; הוא הדרך שבה קוראים לדבר. | The controlled lexical label selected by the cataloguer. A term has an identifier, language, wording, and status; it is how the thing is named.</p>
+          </div>
+          <span class="flow-arrow" aria-hidden="true"></span>
+          <div class="ontology-step concept">
+            <h3>מושג | Concept</h3>
+            <p>המשמעות היציבה שאליה מונח מפנה, בלי תלות בשפה או בניסוח. מזהה המושג מחבר בין מונחים חלופיים ומאפשר בעתיד קישור לאונתולוגיה רשמית. | The stable meaning to which a term refers, independent of language or wording. The concept ID connects alternative terms and supports later alignment with a formal ontology.</p>
+          </div>
+        </div>
+
+        <section class="about-section">
+          <h3>מה היחס בין מונחים למושגים? | How do terms and concepts relate?</h3>
+          <div class="about-grid">
+            <div class="about-card">
+              <h3>כמה מונחים יכולים להפנות לאותו מושג | Several terms may refer to one concept</h3>
+              <p>תרגום, כתיב חלופי, שם היסטורי ושם מחקרי מודרני יכולים לקבל מזהי מונח שונים אך לחלוק מזהה מושג אחד. כך אפשר לשמר את הניסוח המקורי בלי לפצל את המשמעות. | A translation, spelling variant, historical name, and modern scholarly label may have different term IDs while sharing one concept ID. This preserves wording without fragmenting meaning.</p>
+            </div>
+            <div class="about-card warning-card">
+              <h3>מילה זהה אינה מוכיחה שזהות המושג זהה | Identical wording does not prove conceptual identity</h3>
+              <p>אותה מילה יכולה לשמש במשמעויות שונות. לכן אין מאחדים רשומות לפי הטקסט המוצג בלבד; ההבחנה נעשית באמצעות מזהה המושג, ההגדרה ותחום השימוש. | The same word may carry different meanings. Records are therefore not merged by display text alone; concept ID, definition, and scope determine identity.</p>
+            </div>
+            <div class="about-card">
+              <h3>מושג אינו בהכרח קטגוריה במובן הצר | A concept is not always a class in the narrow sense</h3>
+              <p>מושג יכול לייצג טיפוס איקונוגרפי, מוטיב, איבר גוף, ישות מזוהה או קטגוריה חזותית. השדה תפקיד מושגי קובע כיצד לפרש אותו, ובהמשך אילו מושגים יהפכו למחלקות, ישויות או ערכים מבוקרים. | A concept may represent an iconographic type, motif, body part, identified entity, or visual category. Its conceptual role determines how it is interpreted and later modelled as a class, entity, or controlled value.</p>
+            </div>
+            <div class="about-card">
+              <h3>קשר מחקרי הוא טענה נפרדת | A scholarly relation is a separate assertion</h3>
+              <p>המונח והמושג מסווגים כל מופע. קשר מתאר יחס בין שני מופעים, כגון מחזיק, פונה אל או נמצא מעל. מופע יכול להיות מסווג היטב גם בלי קשרים. | The term and concept classify each occurrence. A relation describes how two occurrences are connected, such as holds, faces, or is above. An occurrence may be fully classified without relations.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="about-section">
+          <h3>מה נשמר בזמן הקטלוג? | What is recorded during cataloguing?</h3>
+          <div class="catalog-sequence">
+            <div class="catalog-step">
+              <h3>בוחרים מונח | Select a term</h3>
+              <p>הבחירה נעשית מן הרשימה המבוקרת שבגיליון. המערכת אינה יוצרת מונחים חדשים במסך התיוג. | Selection is made from the controlled spreadsheet register. The annotation screen does not create new terms.</p>
+            </div>
+            <div class="catalog-step">
+              <h3>מסמנים מופע | Mark an occurrence</h3>
+              <p>נקודה או אזור מקבלים מזהה מופע וקואורדינטות ביחס לתמונה המסוימת. | A point or region receives an occurrence ID and coordinates relative to the specific image.</p>
+            </div>
+            <div class="catalog-step">
+              <h3>המושג מצורף אוטומטית | The concept follows automatically</h3>
+              <p>אם המונח ממופה למושג בגיליון, נשמרים גם מזהה המושג ופרטי המושג. המתייג אינו צריך לבחור אותם שוב. | If the term is mapped to a concept in the spreadsheet, the concept ID and concept details are also saved. The cataloguer need not select them again.</p>
+            </div>
+            <div class="catalog-step">
+              <h3>בודקים את החיווי | Check the indicator</h3>
+              <p>מושג מקושר מציין שמיפוי קיים; מונח בלבד מציין שהמונח נשמר אך עדיין אין לו מיפוי למושג. | Concept linked means a mapping exists; term only means the term is stored but has no concept mapping yet.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="about-section">
+          <h3>כללי החלטה לקטלוג עקבי | Decision rules for consistent cataloguing</h3>
+          <div class="about-grid">
+            <div class="about-card decision">
+              <h3>ניסוח חדש, משמעות קיימת | New wording, existing meaning</h3>
+              <p>מוסיפים בגיליון מונח חדש ומקשרים אותו למזהה המושג הקיים. אין ליצור מושג נוסף רק משום שהשפה או האיות השתנו. | Add a new term in the spreadsheet and link it to the existing concept ID. Do not create another concept merely because language or spelling changed.</p>
+            </div>
+            <div class="about-card decision">
+              <h3>משמעות מחקרית חדשה | New scholarly meaning</h3>
+              <p>יוצרים מושג חדש עם מזהה, הגדרה, תחום ותפקיד מושגי, ואז מקשרים אליו מונח אחד או יותר. | Create a new concept with an ID, definition, scope, and conceptual role, then connect one or more terms to it.</p>
+            </div>
+            <div class="about-card warning-card">
+              <h3>המשמעות טרם הוכרעה | Meaning is unresolved</h3>
+              <p>אפשר לשמור מונח ללא מזהה מושג ולסמן אותו לבדיקה. החיווי מונח בלבד הוא מצב מפורש של מיפוי חסר או שטרם הוכרע, ולא איחוד אוטומטי לפי מילה דומה. | A term may be stored without a concept ID and flagged for review. The term only indicator explicitly marks missing or unresolved mapping rather than automatically merging similar wording.</p>
+            </div>
+            <div class="about-card">
+              <h3>שינוי תיוג קיים | Changing an existing annotation</h3>
+              <p>מעבר למונח חלופי של אותו מושג משנה את התווית הלשונית. מעבר למונח שממופה למושג אחר משנה גם את הסיווג המחקרי של המופע. | Switching to an alternative term for the same concept changes the lexical label. Switching to a term mapped to another concept also changes the occurrence's scholarly classification.</p>
+            </div>
+          </div>
+        </section>
+
+        <div class="about-note">
+          <p>כלל מעשי: המתייג בוחר את המונח המתאים למה שנראה בתמונה; הגיליון המבוקר קובע לאיזה מושג המונח שייך. מחלוקות על משמעות נפתרות בגיליון המונחים והמושגים, כדי שכל התמונות ישתמשו באותה החלטה. | Practical rule: the cataloguer selects the term that fits what is visible; the controlled spreadsheet determines the concept to which that term belongs. Disputes about meaning are resolved in the term and concept registers so every image uses the same decision.</p>
+        </div>
+      </div>
+    </section>
   </main>
   <input id="fileInput" type="file" accept="image/*">
   <input id="projectInput" type="file" accept=".zip,.json,.jsonld,.csv,application/zip,application/ld+json,application/json,text/csv">
@@ -136,11 +230,12 @@
     'use strict';
     const SHEET_PUB_ID='2PACX-1vRlfaBuCeBa3jsKuPwX-hIw2Kzhko8SYY4PLVGycB21Sh5uxgAtIeqlAM_NUyJztg';
     const SHEET_URL='https://docs.google.com/spreadsheets/d/e/'+SHEET_PUB_ID+'/pubhtml';
+    // The /d/e/2PACX... URL displays the published document; gviz reads the original file ID.
+    const SHEET_FILE_ID='1L6F6JkDnGseYN_-vlvYdaYy-LVXkCwao';
     const SOURCE_SHEETS=[
       'חומרים | Materials','ערכי חומרים | Material values','מונחים | Terms','ערכי מונחים | Term values','קשרים | Relations','ערכי קשרים | Relation values'
     ];
     const CONCEPT_SHEET='מושגים | Concepts';
-    const PUB_GIDS=[0,1,2,3,4,5];
     const NS='urn:dh-image-annotation:';
     const STATE_KEY='dhImageAnnotationProjectV1';
     const LANG_KEY='dhImageAnnotationLanguage';
@@ -181,7 +276,7 @@
       Object.entries(placeholders).forEach(([id,p])=>{const el=$(id);if(el){el.dataset.placeholderHe=p[0];el.dataset.placeholderEn=p[1]}});
     }
     function applyLanguage(refresh=false){
-      const en=data.lang==='en';document.documentElement.lang=en?'en':'he';document.documentElement.dir=en?'ltr':'rtl';document.title=en?'e-Lijah Lab — Single Image Annotation V1.6':'מעבדת אליהו — כלי סימון תמונה V1.6';$('appTitle').textContent=en?'Single Image Annotation':'כלי סימון תמונה';
+      const en=data.lang==='en';document.documentElement.lang=en?'en':'he';document.documentElement.dir=en?'ltr':'rtl';document.title=en?'e-Lijah Lab — Single Image Annotation V1.7':'מעבדת אליהו — כלי סימון תמונה V1.7';$('appTitle').textContent=en?'Single Image Annotation':'כלי סימון תמונה';
       document.querySelectorAll('[data-i18n-he]').forEach(el=>el.textContent=en?el.dataset.i18nEn:el.dataset.i18nHe);document.querySelectorAll('[data-placeholder-he]').forEach(el=>el.placeholder=en?el.dataset.placeholderEn:el.dataset.placeholderHe);document.querySelectorAll('[data-language]').forEach(b=>b.classList.toggle('active',b.dataset.language===data.lang));if(!data.project?.image?.fileName)$('imageName').textContent=t('לא נבחרה תמונה','No image selected');if(!data.selectedNetworkNode)$('networkSelection').textContent=t('בחרו צומת ברשת כדי לראות את פרטיו ואת דרגתו.','Select a network node to see its details and degree.');
       if(data.status.he)setStatus(data.status.he,data.status.en,data.status.kind);if(refresh)renderAll();
     }
@@ -207,11 +302,12 @@
       }
       return raw;
     }
-    function gviz(sheetIdentifier){return new Promise((resolve,reject)=>{
+    function gviz(sheetName){return new Promise((resolve,reject)=>{
       const cb='__sheetCb_'+Date.now()+'_'+Math.random().toString(36).slice(2);let done=false;
       const script=document.createElement('script');const timer=setTimeout(()=>finish(new Error('timeout')),14000);
-      function finish(err,res){if(done)return;done=true;clearTimeout(timer);delete window[cb];script.remove();err?reject(err):resolve(parseGviz(res));}
-      window[cb]=res=>finish(null,res);script.onerror=()=>finish(new Error('network'));const q=new URLSearchParams({[typeof sheetIdentifier==='number'?'gid':'sheet']:String(sheetIdentifier),tqx:'out:json;responseHandler:'+cb});script.src='https://docs.google.com/spreadsheets/d/e/'+SHEET_PUB_ID+'/gviz/tq?'+q.toString();document.head.appendChild(script);
+      function finish(err,res){if(done)return;done=true;clearTimeout(timer);delete window[cb];script.remove();err?reject(err):resolve(res);}
+      window[cb]=res=>{try{const result=parseGviz(res);if(result?.status==='error'||!result?.table){const detail=result?.errors?.map(e=>e.detailed_message||e.message).filter(Boolean).join('; ')||'No data table returned';finish(new Error(detail));return}finish(null,result)}catch(e){finish(e)}};
+      script.onerror=()=>finish(new Error('Network or access error'));const q=new URLSearchParams({sheet:sheetName,range:'A4:AZ',headers:'1',tqx:'out:json;responseHandler:'+cb});script.src='https://docs.google.com/spreadsheets/d/'+SHEET_FILE_ID+'/gviz/tq?'+q.toString();document.head.appendChild(script);
     })}
     function parseRows(raw){
       const rows=Array.isArray(raw)?raw:gridToRows(raw?.table);if(!rows.length)return[];
@@ -222,12 +318,26 @@
       return rows.slice(headerIndex+1).filter(r=>r.some(v=>String(v??'').trim()!=='')).map(r=>{const o={};headers.forEach((h,i)=>{if(h)o[h]=r[i]??''});return o}).filter(o=>Object.values(o).some(v=>String(v??'').trim()!==''));
     }
     function rowsToMatrix(rows){return rows.map(r=>r.map(c=>c?.v??c?.f??''))}
+    function gvizMatrix(table){return [table.cols.map(c=>c?.label||c?.id||''),...rowsToMatrix((table.rows||[]).map(r=>r.c||[]))]}
+    async function loadSyncedWorkbook(){
+      const abort=new AbortController(),timer=setTimeout(()=>abort.abort(),8000);
+      try{
+        const response=await fetch('./data/register.json?v='+Date.now(),{cache:'no-store',signal:abort.signal});if(!response.ok)throw Error('HTTP '+response.status);
+        const register=await response.json();if(register.schemaVersion!==1||register.fileId!==SHEET_FILE_ID||!register.sheets||!register.generatedAt||!register.sha256)throw Error('Invalid workbook snapshot');
+        if(!SOURCE_SHEETS.every(name=>Array.isArray(register.sheets[name])))throw Error('Missing workbook tabs');
+        const loaded={};[...SOURCE_SHEETS,CONCEPT_SHEET].forEach(name=>{if(register.sheets[name])loaded[name]=parseRows(register.sheets[name])});
+        data.sheets=loaded;data.dataSource='Google Drive Excel: '+register.sourceUrl+'; synced '+register.generatedAt;mapSheets();
+        const date=new Date(register.generatedAt),heTime=Number.isNaN(date.getTime())?register.generatedAt:date.toLocaleString('he-IL'),enTime=Number.isNaN(date.getTime())?register.generatedAt:date.toLocaleString('en-GB');
+        const empty=!data.materials.length;setStatus('Excel מ־Drive סונכרן: '+heTime+(empty?' · עדיין אין רשומות חומרים':''),'Drive Excel synced: '+enTime+(empty?' · no material records yet':''),'ok');renderAll();return true;
+      }catch(e){console.warn('No validated same-origin Excel sync; trying Google directly:',e);return false}finally{clearTimeout(timer)}
+    }
     async function loadSheet(){
-      setStatus('טוען נתונים מהגיליון…','Loading data from the online sheet…');const loaded={};const failures=[];
-      await Promise.all([...SOURCE_SHEETS.map(async(name,i)=>{try{const g=await gviz(PUB_GIDS[i]);const matrix=g?.table?rowsToMatrix(g.table.rows.map(r=>r.c||[])):[];loaded[name]=parseRows(matrix)}catch(e){failures.push(name)}}),
-        (async()=>{try{const g=await gviz(CONCEPT_SHEET);if(g?.table)loaded[CONCEPT_SHEET]=parseRows(rowsToMatrix(g.table.rows.map(r=>r.c||[])))}catch(e){/* Optional: older published sheets contain six tabs. */}})()]);
-      if(Object.keys(loaded).length){data.sheets={...data.sheets,...loaded};mapSheets();const empty=!(loaded[SOURCE_SHEETS[0]]||[]).length;setStatus(failures.length?'חלק מהטאבים לא נטענו. אפשר לטעון CSV לטאב החסר.':empty?'הגיליון נטען בהצלחה; עדיין אין בו רשומות חומרים.':'הגיליון נטען. הנתונים נקראים בלבד.',failures.length?'Some tabs did not load. You may load a CSV for the missing tab.':empty?'The sheet loaded successfully; it does not yet contain material records.':'The sheet loaded in read-only mode.','ok');renderAll();return}
-      setStatus('הגיליון לא נטען אוטומטית. אפשר לטעון Excel מקומי.','The online sheet did not load automatically. You may load a local Excel file.','bad');renderAll();
+      setStatus('טוען נתונים מהגיליון…','Loading data from the online sheet…');const loaded={},failures=[];
+      if(await loadSyncedWorkbook())return;
+      await Promise.all([...SOURCE_SHEETS.map(async name=>{try{loaded[name]=parseRows(gvizMatrix((await gviz(name)).table))}catch(e){failures.push(name+': '+e.message)}}),
+        (async()=>{try{loaded[CONCEPT_SHEET]=parseRows(gvizMatrix((await gviz(CONCEPT_SHEET)).table))}catch(e){/* An older workbook can have six tabs only. */}})()]);
+      if(Object.keys(loaded).length){data.sheets={...data.sheets,...loaded};data.dataSource='Google Drive spreadsheet: '+SHEET_FILE_ID;mapSheets();const empty=!(loaded[SOURCE_SHEETS[0]]||[]).length,missingCore=![SOURCE_SHEETS[0],SOURCE_SHEETS[2]].every(name=>Object.hasOwn(loaded,name));setStatus(missingCore?'לא נטענו טאבי החומרים והמונחים. בדקו את הרשאות הגיליון והאם הוא נשמר כ־Google Sheets.':failures.length?'חלק מטאבי הבחירה לא נטענו. בדקו את שמות הטאבים בגיליון.':empty?'הגיליון נטען בהצלחה; עדיין אין בו רשומות חומרים.':'הגיליון נטען. הנתונים נקראים בלבד.',missingCore?'Materials or terms could not be read. Check sharing settings and that the source is a native Google Sheet.':failures.length?'Some value tabs could not be read. Check their sheet names.':empty?'The sheet loaded successfully; it does not yet contain material records.':'The sheet loaded in read-only mode.',missingCore?'bad':'ok');if(failures.length)console.warn('Google Sheets tabs not loaded:',failures);renderAll();return}
+      console.error('Google Sheets connection failed:',failures);setStatus('לא ניתן לקרוא את גיליון המקור. בדקו שיתוף לצפייה ושמירה כ־Google Sheets; אפשר גם לטעון Excel מקומי.','The source could not be read. Check public viewing and save it as a native Google Sheet; you can also load local Excel.','bad');renderAll();
     }
     function mapSheets(){
       data.materials=data.sheets[SOURCE_SHEETS[0]]||data.materials||[];data.materialValues=columns(data.sheets[SOURCE_SHEETS[1]]||[]);
@@ -410,7 +520,7 @@
     function zipStore(files){const enc=new TextEncoder();let locals=[],central=[],offset=0;for(const f of files){const name=enc.encode(f.name),bytes=f.bytes instanceof Uint8Array?f.bytes:new Uint8Array(f.bytes),crc=crc32(bytes),lh=new Uint8Array([0x50,0x4b,0x03,0x04,...le16(20),...le16(0),...le16(0),...le16(0),...le16(0),...le32(crc),...le32(bytes.length),...le32(bytes.length),...le16(name.length),...le16(0)]);locals.push(lh,name,bytes);const ch=new Uint8Array([0x50,0x4b,0x01,0x02,...le16(20),...le16(20),...le16(0),...le16(0),...le16(0),...le16(0),...le32(crc),...le32(bytes.length),...le32(bytes.length),...le16(name.length),...le16(0),...le16(0),...le16(0),...le16(0),...le32(0),...le32(offset)]);central.push(ch,name);offset+=lh.length+name.length+bytes.length}const csize=central.reduce((n,x)=>n+x.length,0),end=new Uint8Array([0x50,0x4b,0x05,0x06,...le16(0),...le16(0),...le16(files.length),...le16(files.length),...le32(csize),...le32(offset),...le16(0)]);return new Blob([...locals,...central,end],{type:'application/zip'})}
     function readStoredZip(buf){const dv=new DataView(buf);const out={};let o=0;const td=new TextDecoder();while(o+30<buf.byteLength&&dv.getUint32(o,true)===0x04034b50){const flags=dv.getUint16(o+6,true),method=dv.getUint16(o+8,true),size=dv.getUint32(o+18,true),nlen=dv.getUint16(o+26,true),xlen=dv.getUint16(o+28,true);if(flags&8)throw Error('ZIP עם data descriptor אינו נתמך; השתמשו בחבילת הפרויקט שנוצרה בכלי.');if(method!==0)throw Error('החבילה דחוסה. העלו JSON-LD או חבילת ZIP שנוצרה בכלי.');const name=td.decode(new Uint8Array(buf,o+30,nlen));const start=o+30+nlen+xlen;out[name]=new Uint8Array(buf,start,size);o=start+size}return out}
     async function downloadProject(){if(!data.project){alert(t('תחילה העלו תמונה או התחילו פרויקט.','Upload an image or start a project first.'));return}if(!data.project.materialId&&!data.project.annotations.length&&!data.project.image.fileName){alert(t('אין עדיין נתונים לייצוא.','There is no data to export yet.'));return}const json=JSON.stringify(jsonLdProject(),null,2);const files=[{name:'project.jsonld',bytes:new TextEncoder().encode(json)},{name:'knowledge.csv',bytes:new TextEncoder().encode(canonicalCsv())},{name:'annotations.csv',bytes:new TextEncoder().encode(annotationsCsv())},{name:'relations.csv',bytes:new TextEncoder().encode(relationsCsv())},{name:'README.txt',bytes:new TextEncoder().encode(readme())}];if(data.imageFile){files.push({name:'assets/'+safeName(data.imageFile.name),bytes:new Uint8Array(await data.imageFile.arrayBuffer())})}else if(data.imageUrl&&data.imageUrl.startsWith('blob:')){const blob=await fetch(data.imageUrl).then(r=>r.blob());files.push({name:'assets/'+safeName(data.project.image.fileName),bytes:new Uint8Array(await blob.arrayBuffer())})}const blob=zipStore(files);downloadBlob(blob,`image-annotation-${safeName(data.project.materialId||data.project.image.fileName||'project')}-v${data.project.revisions.length}.zip`);data.dirty=false}
-    function readme(){return `e-Lijah Lab Single Image Annotation V1.6 — Project package\n\nThis package represents one source image only.\nPrimary tabular output: knowledge.csv\nEditable semantic record: project.jsonld\n\nknowledge.csv contains the material snapshot, one image record, that image's annotations, normalized geometry, term/concept IDs and any relations already present in this image project. It is designed to be ingested later by a separate collection-level database. Coordinates are normalized to the original image, with SVG selectors retained for W3C Web Annotation interoperability. project.jsonld follows the W3C Web Annotation Data Model; version entities use PROV-O properties.\n\nSource spreadsheet (read-only lookup): ${SHEET_URL}\nData source used in session: ${data.dataSource}\nMaterial ID: ${data.project.materialId}\nImage registration status: ${data.project.image.registrationStatus||''}\nProject ID: ${data.project.id}\nRevision count: ${data.project.revisions.length}\n\nThe original image is packaged under assets/ when available. Upload this ZIP in the tool to resume editing with the image and full revision history. A standalone knowledge.csv can also be opened; reattach the original image file to continue visual editing.\n`}
+    function readme(){return `e-Lijah Lab Single Image Annotation V1.7 — Project package\n\nThis package represents one source image only.\nPrimary tabular output: knowledge.csv\nEditable semantic record: project.jsonld\n\nknowledge.csv contains the material snapshot, one image record, that image's annotations, normalized geometry, term/concept IDs and any relations already present in this image project. It is designed to be ingested later by a separate collection-level database. Coordinates are normalized to the original image, with SVG selectors retained for W3C Web Annotation interoperability. project.jsonld follows the W3C Web Annotation Data Model; version entities use PROV-O properties.\n\nSource spreadsheet (read-only lookup): ${SHEET_URL}\nData source used in session: ${data.dataSource}\nMaterial ID: ${data.project.materialId}\nImage registration status: ${data.project.image.registrationStatus||''}\nProject ID: ${data.project.id}\nRevision count: ${data.project.revisions.length}\n\nThe original image is packaged under assets/ when available. Upload this ZIP in the tool to resume editing with the image and full revision history. A standalone knowledge.csv can also be opened; reattach the original image file to continue visual editing.\n`}
     function downloadBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),3000)}
     function fileFromBytes(bytes,name,type){const inferred=type||({png:'image/png',jpg:'image/jpeg',jpeg:'image/jpeg',gif:'image/gif',webp:'image/webp',tif:'image/tiff',tiff:'image/tiff'}[String(name).split('.').pop().toLowerCase()]||'application/octet-stream');return new File([bytes],name,{type:inferred})}
     async function importProject(file){try{
