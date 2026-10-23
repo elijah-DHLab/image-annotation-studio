@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:dh-image-annotation:schema:project:1.3",
+  "title": "פרויקט סימון תמונה | Image annotation project",
+  "description": "מבנה ולידציה לקובץ project.jsonld שבתוך חבילת הפרויקט.",
+  "type": "object",
+  "required": ["@context", "id", "type", "dcterms:created", "dcterms:modified", "dh:materialId", "dh:image", "dh:annotations", "dh:relations", "dh:versions", "proposedTerms", "proposedPredicates"],
+  "properties": {
+    "@context": {"type": "array", "minItems": 2},
+    "id": {"type": "string", "minLength": 1},
+    "type": {"const": "dh:AnnotationProject"},
+    "dcterms:created": {"type": "string", "format": "date-time"},
+    "dcterms:modified": {"type": "string", "format": "date-time"},
+    "dh:schemaVersion": {"enum": ["1.2", "1.3"]},
+    "dh:sourceSpreadsheet": {"type": "string", "format": "uri"},
+    "dh:materialId": {"type": "string"},
+    "materialSnapshot": {"type": ["object", "null"]},
+    "dh:image": {"$ref": "#/$defs/image"},
+    "dh:annotations": {"type": "array", "items": {"$ref": "#/$defs/annotation"}},
+    "dh:relations": {"type": "array", "items": {"$ref": "#/$defs/relation"}},
+    "proposedTerms": {"type": "array", "items": {"type": "object"}},
+    "proposedPredicates": {"type": "array", "items": {"type": "object"}},
+    "dh:versions": {"type": "array", "items": {"$ref": "#/$defs/version"}}
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "image": {
+      "type": "object",
+      "required": ["id", "type", "dh:fileName", "dh:mediaType", "dh:width", "dh:height", "dh:sha256", "dh:assetPath"],
+      "properties": {
+        "id": {"type": "string"},
+        "type": {"const": "Image"},
+        "dh:fileName": {"type": "string"},
+        "dh:mediaType": {"type": "string"},
+        "dh:width": {"type": "integer", "minimum": 0},
+        "dh:height": {"type": "integer", "minimum": 0},
+        "dh:sha256": {"type": "string"},
+        "dh:assetPath": {"type": "string"},
+        "dh:registrationStatus": {"type": "string", "enum": ["", "registered", "unregistered"]},
+        "dh:matchedMaterialId": {"type": "string"}
+      },
+      "additionalProperties": true
+    },
+    "point": {
+      "type": "object",
+      "required": ["x", "y"],
+      "properties": {"x": {"type": "number", "minimum": 0, "maximum": 1}, "y": {"type": "number", "minimum": 0, "maximum": 1}},
+      "additionalProperties": false
+    },
+    "geometry": {
+      "oneOf": [
+        {"type": "object", "required": ["kind", "points"], "properties": {"kind": {"const": "point"}, "points": {"type": "array", "minItems": 1, "maxItems": 1, "items": {"$ref": "#/$defs/point"}}}, "additionalProperties": true},
+        {"type": "object", "required": ["kind", "x", "y", "width", "height"], "properties": {"kind": {"const": "rect"}, "x": {"type": "number", "minimum": 0, "maximum": 1}, "y": {"type": "number", "minimum": 0, "maximum": 1}, "width": {"type": "number", "exclusiveMinimum": 0}, "height": {"type": "number", "exclusiveMinimum": 0}}, "additionalProperties": true},
+        {"type": "object", "required": ["kind", "points"], "properties": {"kind": {"const": "polygon"}, "points": {"type": "array", "minItems": 3, "items": {"$ref": "#/$defs/point"}}}, "additionalProperties": true}
+      ]
+    },
+    "annotation": {
+      "type": "object",
+      "required": ["id", "type", "motivation", "created", "modified", "body", "target", "geometry"],
+      "properties": {
+        "id": {"type": "string", "minLength": 1},
+        "type": {"const": "Annotation"},
+        "motivation": {"const": "tagging"},
+        "created": {"type": "string", "format": "date-time"},
+        "modified": {"type": "string", "format": "date-time"},
+        "creator": {"type": "object"},
+        "dh:visualOccurrence": {"type": "object", "required": ["id", "type"], "properties": {"id": {"type": "string", "minLength": 1}, "type": {"const": "dh:VisualOccurrence"}}, "additionalProperties": true},
+        "body": {"type": "array", "minItems": 1, "items": {"type": "object"}},
+        "target": {
+          "type": "object",
+          "required": ["source", "selector"],
+          "properties": {
+            "source": {"type": "object", "required": ["id", "type"], "properties": {"id": {"type": "string"}, "type": {"const": "Image"}}, "additionalProperties": true},
+            "selector": {"type": "object", "required": ["type", "value"], "properties": {"type": {"const": "SvgSelector"}, "value": {"type": "string", "pattern": "^<svg\\b"}}, "additionalProperties": true}
+          },
+          "additionalProperties": true
+        },
+        "geometry": {"$ref": "#/$defs/geometry"}
+      },
+      "additionalProperties": true
+    },
+    "relation": {
+      "type": "object",
+      "required": ["id", "type", "dh:subjectAnnotation", "dh:predicate", "dh:objectAnnotation", "dh:evidenceMaterialId", "dh:evidenceLocation", "dh:assertionBasis", "dh:relationStatus"],
+      "properties": {
+        "id": {"type": "string"},
+        "type": {"const": "dh:RelationClaim"},
+        "dh:subjectAnnotation": {"type": "object", "required": ["id"], "properties": {"id": {"type": "string"}}},
+        "dh:predicate": {"type": "object", "required": ["id", "rdfs:label"], "properties": {"id": {"type": "string"}, "rdfs:label": {"type": "object", "required": ["@value", "@language"]}, "dh:status": {"type": "string"}}},
+        "dh:objectAnnotation": {"type": "object", "required": ["id"], "properties": {"id": {"type": "string"}}},
+        "dh:evidenceMaterialId": {"type": "string"},
+        "dh:evidenceLocation": {"type": "string"},
+        "dh:evidenceNote": {"type": "string"},
+        "dh:assertionBasis": {"type": "string"},
+        "dh:relationStatus": {"type": "string"},
+        "prov:generatedAtTime": {"type": "string", "format": "date-time"}
+      },
+      "additionalProperties": true
+    },
+    "version": {
+      "type": "object",
+      "required": ["id", "type", "dh:revisionNumber", "dh:changeSummary", "prov:generatedAtTime", "snapshot"],
+      "properties": {
+        "id": {"type": "string"},
+        "type": {"const": "prov:Entity"},
+        "dh:revisionNumber": {"type": "integer", "minimum": 1},
+        "dh:changeSummary": {"type": "string"},
+        "prov:generatedAtTime": {"type": "string", "format": "date-time"},
+        "prov:wasRevisionOf": {"type": "object", "required": ["id"], "properties": {"id": {"type": "string"}}},
+        "snapshot": {"type": "object", "required": ["materialId", "image", "annotations", "relations"]}
+      },
+      "additionalProperties": true
+    }
+  }
+}
