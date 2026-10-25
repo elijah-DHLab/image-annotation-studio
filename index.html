@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="כלי מקומי לסימון תמונות, קישור למונחים, תיעוד קשרים וניתוח רשת מחקרית.">
-  <title>מעבדת אליהו — כלי סימון תמונה V1.9</title>
+  <title>מעבדת אליהו — כלי סימון תמונה V1.9.1</title>
   <style>
     :root{--ink:#18323a;--muted:#667a80;--line:#d7e1e3;--paper:#f3f7f7;--white:#fff;--blue:#176578;--blue2:#e8f4f6;--gold:#9fbf37;--coral:#d24f4a;--red:#a43f3f;--green:#24705b;--shadow:0 9px 28px #12394212;--radius:14px}
     *{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#eef5f5 0,#f8faf9 360px);color:var(--ink);font-family:Arial,"Noto Sans Hebrew",sans-serif;font-size:15px;line-height:1.45}button,input,select,textarea{font:inherit}button{cursor:pointer}a{color:var(--blue)}
@@ -57,7 +57,7 @@
 </head>
 <body>
   <header>
-    <div class="brand"><img class="brand-logo" src="elijah-lab-logo-wide.jpg" alt="לוגו מעבדת אליהו | e-Lijah lab"><div><h1><span id="appTitle">כלי סימון תמונה</span> <span class="version-badge">V1.9</span></h1><p>מרחב עבודה לתמונה מחקרית אחת</p></div></div>
+    <div class="brand"><img class="brand-logo" src="elijah-lab-logo-wide.jpg" alt="לוגו מעבדת אליהו | e-Lijah lab"><div><h1><span id="appTitle">כלי סימון תמונה</span> <span class="version-badge">V1.9.1</span></h1><p>מרחב עבודה לתמונה מחקרית אחת</p></div></div>
     <div class="head-actions">
       <div class="language-switch" role="group" aria-label="שפת ממשק | Interface language"><button type="button" data-language="he" class="active">עברית</button><button type="button" data-language="en">English</button></div>
       <button class="btn" id="openProject">פתיחת פרויקט | Open project</button>
@@ -280,7 +280,7 @@
       Object.entries(placeholders).forEach(([id,p])=>{const el=$(id);if(el){el.dataset.placeholderHe=p[0];el.dataset.placeholderEn=p[1]}});
     }
     function applyLanguage(refresh=false){
-      const en=data.lang==='en';document.documentElement.lang=en?'en':'he';document.documentElement.dir=en?'ltr':'rtl';document.title=en?'e-Lijah Lab — Single Image Annotation V1.9':'מעבדת אליהו — כלי סימון תמונה V1.9';$('appTitle').textContent=en?'Single Image Annotation':'כלי סימון תמונה';
+      const en=data.lang==='en';document.documentElement.lang=en?'en':'he';document.documentElement.dir=en?'ltr':'rtl';document.title=en?'e-Lijah Lab — Single Image Annotation V1.9.1':'מעבדת אליהו — כלי סימון תמונה V1.9.1';$('appTitle').textContent=en?'Single Image Annotation':'כלי סימון תמונה';
       document.querySelectorAll('[data-i18n-he]').forEach(el=>el.textContent=en?el.dataset.i18nEn:el.dataset.i18nHe);document.querySelectorAll('[data-placeholder-he]').forEach(el=>el.placeholder=en?el.dataset.placeholderEn:el.dataset.placeholderHe);document.querySelectorAll('[data-language]').forEach(b=>b.classList.toggle('active',b.dataset.language===data.lang));if(!data.project?.image?.fileName)$('imageName').textContent=t('לא נבחרה תמונה','No image selected');if(!data.selectedNetworkNode)$('networkSelection').textContent=t('בחרו צומת ברשת כדי לראות את פרטיו ואת דרגתו.','Select a network node to see its details and degree.');
       if(data.status.he)setStatus(data.status.he,data.status.en,data.status.kind);if(refresh)renderAll();
     }
@@ -311,7 +311,9 @@
       const script=document.createElement('script');const timer=setTimeout(()=>finish(new Error('timeout')),14000);
       function finish(err,res){if(done)return;done=true;clearTimeout(timer);delete window[cb];script.remove();err?reject(err):resolve(res);}
       window[cb]=res=>{try{const result=parseGviz(res);if(result?.status==='error'||!result?.table){const detail=result?.errors?.map(e=>e.detailed_message||e.message).filter(Boolean).join('; ')||'No data table returned';finish(new Error(detail));return}finish(null,result)}catch(e){finish(e)}};
-      script.onerror=()=>finish(new Error('Network or access error'));const q=new URLSearchParams({sheet:sheetName,range:'A4:AZ',headers:'1',tqx:'out:json;responseHandler:'+cb});script.src='https://docs.google.com/spreadsheets/d/'+SHEET_FILE_ID+'/gviz/tq?'+q.toString();document.head.appendChild(script);
+      // Include the actual fourth-row header in the returned data. The service may otherwise
+      // leave cols[].label blank or infer the wrong header, silently hiding all terms.
+      script.onerror=()=>finish(new Error('Network or access error'));const q=new URLSearchParams({sheet:sheetName,range:'A1:AZ',headers:'0',tqx:'out:json;responseHandler:'+cb});script.src='https://docs.google.com/spreadsheets/d/'+SHEET_FILE_ID+'/gviz/tq?'+q.toString();document.head.appendChild(script);
     })}
     function parseRows(raw){
       const rows=Array.isArray(raw)?raw:gridToRows(raw?.table);if(!rows.length)return[];
@@ -332,6 +334,7 @@
         if(!SOURCE_SHEETS.every(name=>Array.isArray(register.sheets[name])))throw Error('Missing workbook tabs');
         if(lastSnapshotAt===register.generatedAt&&data.sheets[SOURCE_SHEETS[0]])return true;
         const loaded={};[...SOURCE_SHEETS,CONCEPT_SHEET,CONCEPT_VALUES_SHEET].forEach(name=>{if(register.sheets[name])loaded[name]=parseRows(register.sheets[name])});
+        if(!loaded[SOURCE_SHEETS[2]]?.some(row=>String(row[headerLike(row,'תווית','Label')]||'').trim()))throw Error('Snapshot has no readable term labels');
         data.sheets=loaded;lastSnapshotAt=register.generatedAt;data.dataSource='Google Drive Excel: '+register.sourceUrl+'; synced '+register.generatedAt;mapSheets();
         const date=new Date(register.generatedAt),heTime=Number.isNaN(date.getTime())?register.generatedAt:date.toLocaleString('he-IL'),enTime=Number.isNaN(date.getTime())?register.generatedAt:date.toLocaleString('en-GB');
         const empty=!data.materials.length;setStatus('Excel מ־Drive סונכרן: '+heTime+(empty?' · עדיין אין רשומות חומרים':''),'Drive Excel synced: '+enTime+(empty?' · no material records yet':''),'ok');renderAll();return true;
@@ -342,15 +345,17 @@
       if(sheetLoading)return false;sheetLoading=true;if(!silent)setStatus('קורא את הגיליון המעודכן…','Reading the current sheet…');const loaded={},failures=[];
       try{
         await Promise.all([...SOURCE_SHEETS,CONCEPT_SHEET,CONCEPT_VALUES_SHEET].map(async name=>{try{loaded[name]=parseRows(gvizMatrix((await gviz(name)).table))}catch(e){failures.push(name+': '+e.message)}}));
-        if(SOURCE_SHEETS.every(name=>Object.hasOwn(loaded,name))&&Object.hasOwn(loaded,CONCEPT_SHEET)){
+        const hasAllTabs=SOURCE_SHEETS.every(name=>Object.hasOwn(loaded,name))&&Object.hasOwn(loaded,CONCEPT_SHEET);
+        const hasTerms=loaded[SOURCE_SHEETS[2]]?.some(row=>String(row[headerLike(row,'תווית','Label')]||'').trim());
+        if(hasAllTabs&&hasTerms){
           const changed=SOURCE_SHEETS.concat(CONCEPT_SHEET).some(name=>JSON.stringify(loaded[name])!==JSON.stringify(data.sheets[name]));
           if(changed||data.dataSource.startsWith('Excel מקומי:')){data.sheets=loaded;data.dataSource='Google Sheets live: '+SHEET_FILE_ID;mapSheets();renderAll()}
           if(!silent||changed){const empty=!data.materials.length;setStatus('נתונים עדכניים מ־Google Sheets'+(empty?' · עדיין אין רשומות חומרים':''),'Current Google Sheets data'+(empty?' · no material records yet':''),'ok')}
           return true;
         }
-        if(failures.length)console.warn('Live Google Sheets read failed:',failures);
+        if(!hasTerms)failures.push('Terms register: no readable term labels');if(failures.length)console.warn('Live Google Sheets read failed:',failures);
         if(await loadSyncedWorkbook())return true;
-        if(!silent)setStatus('לא ניתן לקרוא את הגיליון ישירות. בדקו הרשאת צפייה בגיליון; אפשר לטעון Excel מקומי.','Cannot read the live sheet. Check view access; local Excel remains available.','bad');
+        setStatus('טאב המונחים לא נטען: '+(failures.find(x=>x.includes('Terms register'))||failures[0]||'מבנה הנתונים אינו מזוהה')+' · אפשר לטעון Excel מקומי.','Terms were not loaded: '+(failures.find(x=>x.includes('Terms register'))||failures[0]||'unrecognized data structure')+' · Local Excel remains available.','bad');
         return false;
       }finally{sheetLoading=false}
     }
@@ -550,7 +555,7 @@
     function zipStore(files){const enc=new TextEncoder();let locals=[],central=[],offset=0;for(const f of files){const name=enc.encode(f.name),bytes=f.bytes instanceof Uint8Array?f.bytes:new Uint8Array(f.bytes),crc=crc32(bytes),lh=new Uint8Array([0x50,0x4b,0x03,0x04,...le16(20),...le16(0),...le16(0),...le16(0),...le16(0),...le32(crc),...le32(bytes.length),...le32(bytes.length),...le16(name.length),...le16(0)]);locals.push(lh,name,bytes);const ch=new Uint8Array([0x50,0x4b,0x01,0x02,...le16(20),...le16(20),...le16(0),...le16(0),...le16(0),...le16(0),...le32(crc),...le32(bytes.length),...le32(bytes.length),...le16(name.length),...le16(0),...le16(0),...le16(0),...le16(0),...le32(0),...le32(offset)]);central.push(ch,name);offset+=lh.length+name.length+bytes.length}const csize=central.reduce((n,x)=>n+x.length,0),end=new Uint8Array([0x50,0x4b,0x05,0x06,...le16(0),...le16(0),...le16(files.length),...le16(files.length),...le32(csize),...le32(offset),...le16(0)]);return new Blob([...locals,...central,end],{type:'application/zip'})}
     function readStoredZip(buf){const dv=new DataView(buf);const out={};let o=0;const td=new TextDecoder();while(o+30<buf.byteLength&&dv.getUint32(o,true)===0x04034b50){const flags=dv.getUint16(o+6,true),method=dv.getUint16(o+8,true),size=dv.getUint32(o+18,true),nlen=dv.getUint16(o+26,true),xlen=dv.getUint16(o+28,true);if(flags&8)throw Error('ZIP עם data descriptor אינו נתמך; השתמשו בחבילת הפרויקט שנוצרה בכלי.');if(method!==0)throw Error('החבילה דחוסה. העלו JSON-LD או חבילת ZIP שנוצרה בכלי.');const name=td.decode(new Uint8Array(buf,o+30,nlen));const start=o+30+nlen+xlen;out[name]=new Uint8Array(buf,start,size);o=start+size}return out}
     async function downloadProject(){if(!data.project){alert(t('תחילה העלו תמונה או התחילו פרויקט.','Upload an image or start a project first.'));return}if(!data.project.materialId&&!data.project.annotations.length&&!data.project.image.fileName){alert(t('אין עדיין נתונים לייצוא.','There is no data to export yet.'));return}const json=JSON.stringify(jsonLdProject(),null,2);const files=[{name:'project.jsonld',bytes:new TextEncoder().encode(json)},{name:'knowledge.csv',bytes:new TextEncoder().encode(canonicalCsv())},{name:'annotations.csv',bytes:new TextEncoder().encode(annotationsCsv())},{name:'relations.csv',bytes:new TextEncoder().encode(relationsCsv())},{name:'README.txt',bytes:new TextEncoder().encode(readme())}];if(data.imageFile){files.push({name:'assets/'+safeName(data.imageFile.name),bytes:new Uint8Array(await data.imageFile.arrayBuffer())})}else if(data.imageUrl&&data.imageUrl.startsWith('blob:')){const blob=await fetch(data.imageUrl).then(r=>r.blob());files.push({name:'assets/'+safeName(data.project.image.fileName),bytes:new Uint8Array(await blob.arrayBuffer())})}const blob=zipStore(files);downloadBlob(blob,`image-annotation-${safeName(data.project.materialId||data.project.image.fileName||'project')}-v${data.project.revisions.length}.zip`);data.dirty=false}
-    function readme(){return `e-Lijah Lab Single Image Annotation V1.9 — Project package\n\nThis package represents one source image only.\nPrimary tabular output: knowledge.csv\nEditable semantic record: project.jsonld\n\nknowledge.csv contains the material snapshot, one image record, that image's annotations, normalized geometry, term/concept IDs and any relations already present in this image project. It is designed to be ingested later by a separate collection-level database. Coordinates are normalized to the original image, with SVG selectors retained for W3C Web Annotation interoperability. project.jsonld follows the W3C Web Annotation Data Model; version entities use PROV-O properties.\n\nSource spreadsheet (read-only lookup): ${SHEET_URL}\nData source used in session: ${data.dataSource}\nMaterial ID: ${data.project.materialId}\nImage registration status: ${data.project.image.registrationStatus||''}\nProject ID: ${data.project.id}\nRevision count: ${data.project.revisions.length}\n\nThe original image is packaged under assets/ when available. Upload this ZIP in the tool to resume editing with the image and full revision history. A standalone knowledge.csv can also be opened; reattach the original image file to continue visual editing.\n`}
+    function readme(){return `e-Lijah Lab Single Image Annotation V1.9.1 — Project package\n\nThis package represents one source image only.\nPrimary tabular output: knowledge.csv\nEditable semantic record: project.jsonld\n\nknowledge.csv contains the material snapshot, one image record, that image's annotations, normalized geometry, term/concept IDs and any relations already present in this image project. It is designed to be ingested later by a separate collection-level database. Coordinates are normalized to the original image, with SVG selectors retained for W3C Web Annotation interoperability. project.jsonld follows the W3C Web Annotation Data Model; version entities use PROV-O properties.\n\nSource spreadsheet (read-only lookup): ${SHEET_URL}\nData source used in session: ${data.dataSource}\nMaterial ID: ${data.project.materialId}\nImage registration status: ${data.project.image.registrationStatus||''}\nProject ID: ${data.project.id}\nRevision count: ${data.project.revisions.length}\n\nThe original image is packaged under assets/ when available. Upload this ZIP in the tool to resume editing with the image and full revision history. A standalone knowledge.csv can also be opened; reattach the original image file to continue visual editing.\n`}
     function downloadBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),3000)}
     function fileFromBytes(bytes,name,type){const inferred=type||({png:'image/png',jpg:'image/jpeg',jpeg:'image/jpeg',gif:'image/gif',webp:'image/webp',tif:'image/tiff',tiff:'image/tiff'}[String(name).split('.').pop().toLowerCase()]||'application/octet-stream');return new File([bytes],name,{type:inferred})}
     async function importProject(file){try{
