@@ -21,14 +21,14 @@ FILE_ID = "1SA4BpAIzvyGni1vWtfShJsrmiT4e6NsNKOUAawrg-Jg"
 PUB_ID = "2PACX-1vQj4w296kYOOoABSkW-C8hOFo4DQI7DrLj_M5KEAthMTO5x5NOQ0Z_TCVU9uG9IfDCl9LwLx07cCbFc"
 SOURCE_URL = f"https://docs.google.com/spreadsheets/d/{FILE_ID}/edit"
 SHEETS = (
-    "רישום חומרים | Materials register",
-    "ערכי בחירה לחומרים | Material controlled values",
-    "רישום מונחים | Terms register",
-    "ערכי בחירה למונחים | Term controlled values",
-    "רישום קשרים ושלשות | Relations and triples register",
-    "ערכי בחירה לקשרים | Relation controlled values",
+    "חומרים | Materials",
+    "ערכי חומרים | Material values",
+    "מונחים | Terms",
+    "ערכי מונחים | Term values",
+    "קשרים | Relations",
+    "ערכי קשרים | Relation values",
 )
-OPTIONAL_SHEETS = ("רישום מושגים | Concepts register", "ערכי בחירה למושגים | Controlled concept values")
+OPTIONAL_SHEETS = ("מושגים | Concepts", "ערכי מושגים | Concept values")
 DOWNLOAD_URLS = (
     f"https://docs.google.com/spreadsheets/d/{FILE_ID}/export?format=xlsx",
     f"https://docs.google.com/spreadsheets/d/e/{PUB_ID}/pub?output=xlsx",
@@ -79,8 +79,19 @@ def read_register(payload):
         if not any(any(str(cell or "").strip().startswith(("מזהה חומר |", "מזהה מונח |", "מזהה קשר |", "רמת תיעוד |", "סוג תווית |", "סוג צומת |", "מזהה מושג |", "מעמד מושגי |")) for cell in row) for row in rows[:8]):
             raise ValueError(f"No recognized bilingual header row in {name}")
         sheets[name] = rows
-    if not any("TERM-" in str(row) for row in sheets["רישום מונחים | Terms register"]):
-        raise ValueError("Terms tab has no TERM IDs; refusing to publish an empty register")
+    term_rows = sheets["מונחים | Terms"]
+    header_index = next(i for i, row in enumerate(term_rows) if "מזהה מונח | Term ID" in row)
+    headers = term_rows[header_index]
+    id_index, label_index = headers.index("מזהה מונח | Term ID"), headers.index("תווית | Label")
+    ids = set()
+    for row in term_rows[header_index + 1:]:
+        term_id = str(row[id_index] or "").strip() if len(row) > id_index else ""
+        label = str(row[label_index] or "").strip() if len(row) > label_index else ""
+        if not term_id or not label or term_id in ids:
+            raise ValueError("Missing or duplicate Term ID / Label: " + term_id)
+        ids.add(term_id)
+    if not ids:
+        raise ValueError("Terms tab is empty; refusing to publish an empty register")
     return {"schemaVersion": 1, "sourceUrl": SOURCE_URL,
             "publishedUrl": f"https://docs.google.com/spreadsheets/d/e/{PUB_ID}/pubhtml",
             "fileId": FILE_ID, "generatedAt": datetime.now(timezone.utc).isoformat(),
@@ -98,6 +109,8 @@ def main():
     result = read_register(payload)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    bundle = args.output.with_name("register-bundled.js")
+    bundle.write_text("window.BUNDLED_REGISTER=" + json.dumps(result, ensure_ascii=True, separators=(",", ":")) + ";\n", encoding="utf-8")
     print(f"Validated {len(result['sheets'])} tabs from the public Google Sheet; snapshot: {args.output}")
 
 
