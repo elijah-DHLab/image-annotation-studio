@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="כלי מקומי לסימון תמונות, קישור למונחים, תיעוד קשרים וניתוח רשת מחקרית.">
-  <title>מעבדת אליהו — כלי סימון תמונה V1.8</title>
+  <title>מעבדת אליהו — כלי סימון תמונה V1.9</title>
   <style>
     :root{--ink:#18323a;--muted:#667a80;--line:#d7e1e3;--paper:#f3f7f7;--white:#fff;--blue:#176578;--blue2:#e8f4f6;--gold:#9fbf37;--coral:#d24f4a;--red:#a43f3f;--green:#24705b;--shadow:0 9px 28px #12394212;--radius:14px}
     *{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#eef5f5 0,#f8faf9 360px);color:var(--ink);font-family:Arial,"Noto Sans Hebrew",sans-serif;font-size:15px;line-height:1.45}button,input,select,textarea{font:inherit}button{cursor:pointer}a{color:var(--blue)}
@@ -57,13 +57,13 @@
 </head>
 <body>
   <header>
-    <div class="brand"><img class="brand-logo" src="elijah-lab-logo-wide.jpg" alt="לוגו מעבדת אליהו | e-Lijah lab"><div><h1><span id="appTitle">כלי סימון תמונה</span> <span class="version-badge">V1.8</span></h1><p>מרחב עבודה לתמונה מחקרית אחת</p></div></div>
+    <div class="brand"><img class="brand-logo" src="elijah-lab-logo-wide.jpg" alt="לוגו מעבדת אליהו | e-Lijah lab"><div><h1><span id="appTitle">כלי סימון תמונה</span> <span class="version-badge">V1.9</span></h1><p>מרחב עבודה לתמונה מחקרית אחת</p></div></div>
     <div class="head-actions">
       <div class="language-switch" role="group" aria-label="שפת ממשק | Interface language"><button type="button" data-language="he" class="active">עברית</button><button type="button" data-language="en">English</button></div>
       <button class="btn" id="openProject">פתיחת פרויקט | Open project</button>
       <button class="btn" id="downloadProject">שמירת פרויקט | Save project</button>
       <button class="btn primary" id="downloadCanonicalCsv">הורדת CSV | Download CSV</button>
-      <a class="btn" id="syncNow" href="https://github.com/elijah-dhlab/image-annotation-studio/actions/workflows/sync-sheet.yml" target="_blank" rel="noopener">סנכרון מיידי | Sync now</a>
+      <button class="btn" id="syncNow" type="button">רענון נתונים | Refresh data</button>
     </div>
   </header>
   <main>
@@ -230,14 +230,16 @@
   <script>
   (()=>{
     'use strict';
-    const SHEET_PUB_ID='2PACX-1vRlfaBuCeBa3jsKuPwX-hIw2Kzhko8SYY4PLVGycB21Sh5uxgAtIeqlAM_NUyJztg';
+    const SHEET_PUB_ID='2PACX-1vQj4w296kYOOoABSkW-C8hOFo4DQI7DrLj_M5KEAthMTO5x5NOQ0Z_TCVU9uG9IfDCl9LwLx07cCbFc';
     const SHEET_URL='https://docs.google.com/spreadsheets/d/e/'+SHEET_PUB_ID+'/pubhtml';
     // The /d/e/2PACX... URL displays the published document; gviz reads the original file ID.
-    const SHEET_FILE_ID='1L6F6JkDnGseYN_-vlvYdaYy-LVXkCwao';
+    const SHEET_FILE_ID='1SA4BpAIzvyGni1vWtfShJsrmiT4e6NsNKOUAawrg-Jg';
     const SOURCE_SHEETS=[
-      'חומרים | Materials','ערכי חומרים | Material values','מונחים | Terms','ערכי מונחים | Term values','קשרים | Relations','ערכי קשרים | Relation values'
+      'רישום חומרים | Materials register','ערכי בחירה לחומרים | Material controlled values','רישום מונחים | Terms register','ערכי בחירה למונחים | Term controlled values','רישום קשרים ושלשות | Relations and triples register','ערכי בחירה לקשרים | Relation controlled values'
     ];
-    const CONCEPT_SHEET='מושגים | Concepts';
+    const CONCEPT_SHEET='רישום מושגים | Concepts register';
+    const CONCEPT_VALUES_SHEET='ערכי בחירה למושגים | Controlled concept values';
+    const LEGACY_SHEETS=['חומרים | Materials','ערכי חומרים | Material values','מונחים | Terms','ערכי מונחים | Term values','קשרים | Relations','ערכי קשרים | Relation values','מושגים | Concepts','ערכי מושגים | Concept values'];
     const NS='urn:dh-image-annotation:';
     const STATE_KEY='dhImageAnnotationProjectV1';
     const LANG_KEY='dhImageAnnotationLanguage';
@@ -278,7 +280,7 @@
       Object.entries(placeholders).forEach(([id,p])=>{const el=$(id);if(el){el.dataset.placeholderHe=p[0];el.dataset.placeholderEn=p[1]}});
     }
     function applyLanguage(refresh=false){
-      const en=data.lang==='en';document.documentElement.lang=en?'en':'he';document.documentElement.dir=en?'ltr':'rtl';document.title=en?'e-Lijah Lab — Single Image Annotation V1.8':'מעבדת אליהו — כלי סימון תמונה V1.8';$('appTitle').textContent=en?'Single Image Annotation':'כלי סימון תמונה';
+      const en=data.lang==='en';document.documentElement.lang=en?'en':'he';document.documentElement.dir=en?'ltr':'rtl';document.title=en?'e-Lijah Lab — Single Image Annotation V1.9':'מעבדת אליהו — כלי סימון תמונה V1.9';$('appTitle').textContent=en?'Single Image Annotation':'כלי סימון תמונה';
       document.querySelectorAll('[data-i18n-he]').forEach(el=>el.textContent=en?el.dataset.i18nEn:el.dataset.i18nHe);document.querySelectorAll('[data-placeholder-he]').forEach(el=>el.placeholder=en?el.dataset.placeholderEn:el.dataset.placeholderHe);document.querySelectorAll('[data-language]').forEach(b=>b.classList.toggle('active',b.dataset.language===data.lang));if(!data.project?.image?.fileName)$('imageName').textContent=t('לא נבחרה תמונה','No image selected');if(!data.selectedNetworkNode)$('networkSelection').textContent=t('בחרו צומת ברשת כדי לראות את פרטיו ואת דרגתו.','Select a network node to see its details and degree.');
       if(data.status.he)setStatus(data.status.he,data.status.en,data.status.kind);if(refresh)renderAll();
     }
@@ -329,19 +331,28 @@
         const register=await response.json();if(register.schemaVersion!==1||register.fileId!==SHEET_FILE_ID||!register.sheets||!register.generatedAt||!register.sha256)throw Error('Invalid workbook snapshot');
         if(!SOURCE_SHEETS.every(name=>Array.isArray(register.sheets[name])))throw Error('Missing workbook tabs');
         if(lastSnapshotAt===register.generatedAt&&data.sheets[SOURCE_SHEETS[0]])return true;
-        const loaded={};[...SOURCE_SHEETS,CONCEPT_SHEET].forEach(name=>{if(register.sheets[name])loaded[name]=parseRows(register.sheets[name])});
+        const loaded={};[...SOURCE_SHEETS,CONCEPT_SHEET,CONCEPT_VALUES_SHEET].forEach(name=>{if(register.sheets[name])loaded[name]=parseRows(register.sheets[name])});
         data.sheets=loaded;lastSnapshotAt=register.generatedAt;data.dataSource='Google Drive Excel: '+register.sourceUrl+'; synced '+register.generatedAt;mapSheets();
         const date=new Date(register.generatedAt),heTime=Number.isNaN(date.getTime())?register.generatedAt:date.toLocaleString('he-IL'),enTime=Number.isNaN(date.getTime())?register.generatedAt:date.toLocaleString('en-GB');
         const empty=!data.materials.length;setStatus('Excel מ־Drive סונכרן: '+heTime+(empty?' · עדיין אין רשומות חומרים':''),'Drive Excel synced: '+enTime+(empty?' · no material records yet':''),'ok');renderAll();return true;
       }catch(e){console.warn('No validated same-origin Excel sync; trying Google directly:',e);return false}finally{clearTimeout(timer)}
     }
-    async function loadSheet(){
-      setStatus('טוען נתונים מהגיליון…','Loading data from the online sheet…');const loaded={},failures=[];
-      if(await loadSyncedWorkbook())return;
-      await Promise.all([...SOURCE_SHEETS.map(async name=>{try{loaded[name]=parseRows(gvizMatrix((await gviz(name)).table))}catch(e){failures.push(name+': '+e.message)}}),
-        (async()=>{try{loaded[CONCEPT_SHEET]=parseRows(gvizMatrix((await gviz(CONCEPT_SHEET)).table))}catch(e){/* An older workbook can have six tabs only. */}})()]);
-      if(Object.keys(loaded).length){data.sheets={...data.sheets,...loaded};data.dataSource='Google Drive spreadsheet: '+SHEET_FILE_ID;mapSheets();const empty=!(loaded[SOURCE_SHEETS[0]]||[]).length,missingCore=![SOURCE_SHEETS[0],SOURCE_SHEETS[2]].every(name=>Object.hasOwn(loaded,name));setStatus(missingCore?'לא נטענו טאבי החומרים והמונחים. בדקו את הרשאות הגיליון והאם הוא נשמר כ־Google Sheets.':failures.length?'חלק מטאבי הבחירה לא נטענו. בדקו את שמות הטאבים בגיליון.':empty?'הגיליון נטען בהצלחה; עדיין אין בו רשומות חומרים.':'הגיליון נטען. הנתונים נקראים בלבד.',missingCore?'Materials or terms could not be read. Check sharing settings and that the source is a native Google Sheet.':failures.length?'Some value tabs could not be read. Check their sheet names.':empty?'The sheet loaded successfully; it does not yet contain material records.':'The sheet loaded in read-only mode.',missingCore?'bad':'ok');if(failures.length)console.warn('Google Sheets tabs not loaded:',failures);renderAll();return}
-      console.error('Google Sheets connection failed:',failures);setStatus('לא ניתן לקרוא את גיליון המקור. בדקו שיתוף לצפייה ושמירה כ־Google Sheets; אפשר גם לטעון Excel מקומי.','The source could not be read. Check public viewing and save it as a native Google Sheet; you can also load local Excel.','bad');renderAll();
+    let sheetLoading=false;
+    async function loadSheet(silent=false){
+      if(sheetLoading)return false;sheetLoading=true;if(!silent)setStatus('קורא את הגיליון המעודכן…','Reading the current sheet…');const loaded={},failures=[];
+      try{
+        await Promise.all([...SOURCE_SHEETS,CONCEPT_SHEET,CONCEPT_VALUES_SHEET].map(async name=>{try{loaded[name]=parseRows(gvizMatrix((await gviz(name)).table))}catch(e){failures.push(name+': '+e.message)}}));
+        if(SOURCE_SHEETS.every(name=>Object.hasOwn(loaded,name))&&Object.hasOwn(loaded,CONCEPT_SHEET)){
+          const changed=SOURCE_SHEETS.concat(CONCEPT_SHEET).some(name=>JSON.stringify(loaded[name])!==JSON.stringify(data.sheets[name]));
+          if(changed||data.dataSource.startsWith('Excel מקומי:')){data.sheets=loaded;data.dataSource='Google Sheets live: '+SHEET_FILE_ID;mapSheets();renderAll()}
+          if(!silent||changed){const empty=!data.materials.length;setStatus('נתונים עדכניים מ־Google Sheets'+(empty?' · עדיין אין רשומות חומרים':''),'Current Google Sheets data'+(empty?' · no material records yet':''),'ok')}
+          return true;
+        }
+        if(failures.length)console.warn('Live Google Sheets read failed:',failures);
+        if(await loadSyncedWorkbook())return true;
+        if(!silent)setStatus('לא ניתן לקרוא את הגיליון ישירות. בדקו הרשאת צפייה בגיליון; אפשר לטעון Excel מקומי.','Cannot read the live sheet. Check view access; local Excel remains available.','bad');
+        return false;
+      }finally{sheetLoading=false}
     }
     function predicateOptions(){
       const rows=data.sheets[SOURCE_SHEETS[5]]||[],header=rows.length?headerLike(rows[0],'יחס','Predicate'):'';
@@ -361,10 +372,10 @@
       setStatus('קורא קובץ Excel מקומי…','Reading the local Excel file…');
       try{
         const workbook=await window.LocalXlsx.parse(file);const loaded={};
-        [...SOURCE_SHEETS,CONCEPT_SHEET].forEach(expected=>{
+        [...SOURCE_SHEETS,CONCEPT_SHEET,CONCEPT_VALUES_SHEET].forEach((expected,index)=>{
           const exact=workbook.sheets[expected];
           const he=expected.split('|')[0].trim(),en=expected.split('|')[1]?.trim();
-          const key=Object.keys(workbook.sheets).find(k=>k===expected||normalize(k)===normalize(expected)||normalize(k).includes(normalize(he))||(en&&normalize(k).includes(normalize(en))));
+          const key=Object.keys(workbook.sheets).find(k=>k===expected||k===LEGACY_SHEETS[index]||normalize(k)===normalize(expected)||normalize(k).includes(normalize(he))||(en&&normalize(k).includes(normalize(en))));
           if(exact||key)loaded[expected]=parseRows(exact||workbook.sheets[key]);
         });
         const missing=SOURCE_SHEETS.filter(s=>!loaded[s]);
@@ -539,7 +550,7 @@
     function zipStore(files){const enc=new TextEncoder();let locals=[],central=[],offset=0;for(const f of files){const name=enc.encode(f.name),bytes=f.bytes instanceof Uint8Array?f.bytes:new Uint8Array(f.bytes),crc=crc32(bytes),lh=new Uint8Array([0x50,0x4b,0x03,0x04,...le16(20),...le16(0),...le16(0),...le16(0),...le16(0),...le32(crc),...le32(bytes.length),...le32(bytes.length),...le16(name.length),...le16(0)]);locals.push(lh,name,bytes);const ch=new Uint8Array([0x50,0x4b,0x01,0x02,...le16(20),...le16(20),...le16(0),...le16(0),...le16(0),...le16(0),...le32(crc),...le32(bytes.length),...le32(bytes.length),...le16(name.length),...le16(0),...le16(0),...le16(0),...le16(0),...le32(0),...le32(offset)]);central.push(ch,name);offset+=lh.length+name.length+bytes.length}const csize=central.reduce((n,x)=>n+x.length,0),end=new Uint8Array([0x50,0x4b,0x05,0x06,...le16(0),...le16(0),...le16(files.length),...le16(files.length),...le32(csize),...le32(offset),...le16(0)]);return new Blob([...locals,...central,end],{type:'application/zip'})}
     function readStoredZip(buf){const dv=new DataView(buf);const out={};let o=0;const td=new TextDecoder();while(o+30<buf.byteLength&&dv.getUint32(o,true)===0x04034b50){const flags=dv.getUint16(o+6,true),method=dv.getUint16(o+8,true),size=dv.getUint32(o+18,true),nlen=dv.getUint16(o+26,true),xlen=dv.getUint16(o+28,true);if(flags&8)throw Error('ZIP עם data descriptor אינו נתמך; השתמשו בחבילת הפרויקט שנוצרה בכלי.');if(method!==0)throw Error('החבילה דחוסה. העלו JSON-LD או חבילת ZIP שנוצרה בכלי.');const name=td.decode(new Uint8Array(buf,o+30,nlen));const start=o+30+nlen+xlen;out[name]=new Uint8Array(buf,start,size);o=start+size}return out}
     async function downloadProject(){if(!data.project){alert(t('תחילה העלו תמונה או התחילו פרויקט.','Upload an image or start a project first.'));return}if(!data.project.materialId&&!data.project.annotations.length&&!data.project.image.fileName){alert(t('אין עדיין נתונים לייצוא.','There is no data to export yet.'));return}const json=JSON.stringify(jsonLdProject(),null,2);const files=[{name:'project.jsonld',bytes:new TextEncoder().encode(json)},{name:'knowledge.csv',bytes:new TextEncoder().encode(canonicalCsv())},{name:'annotations.csv',bytes:new TextEncoder().encode(annotationsCsv())},{name:'relations.csv',bytes:new TextEncoder().encode(relationsCsv())},{name:'README.txt',bytes:new TextEncoder().encode(readme())}];if(data.imageFile){files.push({name:'assets/'+safeName(data.imageFile.name),bytes:new Uint8Array(await data.imageFile.arrayBuffer())})}else if(data.imageUrl&&data.imageUrl.startsWith('blob:')){const blob=await fetch(data.imageUrl).then(r=>r.blob());files.push({name:'assets/'+safeName(data.project.image.fileName),bytes:new Uint8Array(await blob.arrayBuffer())})}const blob=zipStore(files);downloadBlob(blob,`image-annotation-${safeName(data.project.materialId||data.project.image.fileName||'project')}-v${data.project.revisions.length}.zip`);data.dirty=false}
-    function readme(){return `e-Lijah Lab Single Image Annotation V1.8 — Project package\n\nThis package represents one source image only.\nPrimary tabular output: knowledge.csv\nEditable semantic record: project.jsonld\n\nknowledge.csv contains the material snapshot, one image record, that image's annotations, normalized geometry, term/concept IDs and any relations already present in this image project. It is designed to be ingested later by a separate collection-level database. Coordinates are normalized to the original image, with SVG selectors retained for W3C Web Annotation interoperability. project.jsonld follows the W3C Web Annotation Data Model; version entities use PROV-O properties.\n\nSource spreadsheet (read-only lookup): ${SHEET_URL}\nData source used in session: ${data.dataSource}\nMaterial ID: ${data.project.materialId}\nImage registration status: ${data.project.image.registrationStatus||''}\nProject ID: ${data.project.id}\nRevision count: ${data.project.revisions.length}\n\nThe original image is packaged under assets/ when available. Upload this ZIP in the tool to resume editing with the image and full revision history. A standalone knowledge.csv can also be opened; reattach the original image file to continue visual editing.\n`}
+    function readme(){return `e-Lijah Lab Single Image Annotation V1.9 — Project package\n\nThis package represents one source image only.\nPrimary tabular output: knowledge.csv\nEditable semantic record: project.jsonld\n\nknowledge.csv contains the material snapshot, one image record, that image's annotations, normalized geometry, term/concept IDs and any relations already present in this image project. It is designed to be ingested later by a separate collection-level database. Coordinates are normalized to the original image, with SVG selectors retained for W3C Web Annotation interoperability. project.jsonld follows the W3C Web Annotation Data Model; version entities use PROV-O properties.\n\nSource spreadsheet (read-only lookup): ${SHEET_URL}\nData source used in session: ${data.dataSource}\nMaterial ID: ${data.project.materialId}\nImage registration status: ${data.project.image.registrationStatus||''}\nProject ID: ${data.project.id}\nRevision count: ${data.project.revisions.length}\n\nThe original image is packaged under assets/ when available. Upload this ZIP in the tool to resume editing with the image and full revision history. A standalone knowledge.csv can also be opened; reattach the original image file to continue visual editing.\n`}
     function downloadBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),3000)}
     function fileFromBytes(bytes,name,type){const inferred=type||({png:'image/png',jpg:'image/jpeg',jpeg:'image/jpeg',gif:'image/gif',webp:'image/webp',tif:'image/tiff',tiff:'image/tiff'}[String(name).split('.').pop().toLowerCase()]||'application/octet-stream');return new File([bytes],name,{type:inferred})}
     async function importProject(file){try{
@@ -572,14 +583,14 @@
     function bind(){
       $('loadWorkbook').onclick=()=>$('xlsxInput').click();$('xlsxInput').onchange=e=>{if(e.target.files[0])loadWorkbookFile(e.target.files[0]);e.target.value=''};$('materialSearch').addEventListener('input',renderMaterials);$('setManualMaterial').onclick=()=>{const id=$('manualMaterialId').value.trim();if(id)selectMaterial(id)};
       $('uploadImage').onclick=()=>$('fileInput').click();$('fileInput').onchange=e=>{if(e.target.files[0])setImage(e.target.files[0]);e.target.value=''};$('zoomOut').onclick=()=>changeZoom(-.25);$('zoomIn').onclick=()=>changeZoom(.25);$('zoomValue').onclick=()=>updateZoom(1);$('resetImage').onclick=resetImageProject;
-      $('syncNow').onclick=()=>setStatus('נפתח GitHub Actions. לחצו Run workflow; לאחר הפרסום הנתונים ייטענו כאן אוטומטית בתוך כחצי דקה.','GitHub Actions opened. Click Run workflow; the published data will load here automatically within about 30 seconds.','ok');
+      $('syncNow').onclick=()=>loadSheet();
       document.querySelectorAll('.tool').forEach(b=>b.onclick=()=>setTool(b.dataset.tool));$('finishPolygon').onclick=finishPolygon;$('cancelPolygon').onclick=()=>{data.polygon=[];$('finishPolygon').disabled=true;$('cancelPolygon').disabled=true;drawAnnotations()};
       $('applyTerm').onclick=applyTerm;$('termSearchQuick').addEventListener('input',renderTerms);$('downloadProject').onclick=downloadProject;$('downloadCanonicalCsv').onclick=downloadCanonicalCsv;$('openProject').onclick=()=>$('projectInput').click();$('projectInput').onchange=e=>{if(e.target.files[0])importProject(e.target.files[0]);e.target.value=''};
       document.querySelectorAll('[data-language]').forEach(b=>b.onclick=()=>{data.lang=b.dataset.language;localStorage.setItem(LANG_KEY,data.lang);applyLanguage(true)});document.querySelectorAll('[data-app-tab]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-app-tab]').forEach(x=>x.classList.toggle('active',x===b));document.querySelectorAll('.app-view').forEach(x=>x.classList.toggle('active',x.id===b.dataset.appTab));if(b.dataset.appTab==='networkView')renderNetwork();if(b.dataset.appTab==='dataView')renderDataTable()});document.querySelectorAll('[data-data-table]').forEach(b=>b.onclick=()=>{data.activeDataTable=b.dataset.dataTable;document.querySelectorAll('[data-data-table]').forEach(x=>x.classList.toggle('active',x===b));renderDataTable(networkData())});window.addEventListener('beforeunload',e=>{if(data.dirty){e.preventDefault();e.returnValue=''}});
     }
     // Restore the latest metadata-only session after a reload. Image data is restored from the downloaded project package.
     function restoreLocal(){try{const raw=localStorage.getItem(STATE_KEY);if(!raw)return;const p=JSON.parse(raw);if(p&&p.id){p.annotations||=[];p.relations||=[];p.proposedTerms||=[];p.proposedPredicates||=[];p.revisions||=[];p.image||={};data.project=p;data.selectedMaterial=p.materialSnapshot;data.imageInfo=p.image.width&&p.image.height?{width:p.image.width,height:p.image.height}:null;data.dirty=false}}catch(e){}}
-    function init(){prepareLanguageNodes();restoreLocal();bind();applyLanguage(false);mapSheets();renderAll();if(location.protocol==='file:')setStatus('מצב מקומי: טענו את קובץ ה־Excel מהמחשב.','Local mode: load the Excel file from your computer.','ok');else{loadSheet();setInterval(()=>{if(!document.hidden&&!data.dataSource.startsWith('Excel מקומי:'))loadSyncedWorkbook()},30000)}}
+    function init(){prepareLanguageNodes();restoreLocal();bind();applyLanguage(false);mapSheets();renderAll();if(location.protocol==='file:')setStatus('מצב מקומי: טענו את קובץ ה־Excel מהמחשב.','Local mode: load the Excel file from your computer.','ok');else{loadSheet();setInterval(()=>{if(!document.hidden&&!data.dataSource.startsWith('Excel מקומי:'))loadSheet(true)},60000);document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!data.dataSource.startsWith('Excel מקומי:'))loadSheet(true)})}}
     init();
   })();
   </script>

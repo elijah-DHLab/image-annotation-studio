@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the browser-readable register from the public Excel file in Google Drive.
+"""Build a browser-readable fallback snapshot from the native public Google Sheet.
 
 Run by GitHub Actions before each Pages deployment. The workbook stays authoritative;
 the generated JSON is an exact, read-only snapshot with source and sync timestamps.
@@ -17,21 +17,20 @@ from zipfile import BadZipFile, ZipFile
 
 from openpyxl import load_workbook
 
-FILE_ID = "1L6F6JkDnGseYN_-vlvYdaYy-LVXkCwao"
-PUB_ID = "2PACX-1vRlfaBuCeBa3jsKuPwX-hIw2Kzhko8SYY4PLVGycB21Sh5uxgAtIeqlAM_NUyJztg"
+FILE_ID = "1SA4BpAIzvyGni1vWtfShJsrmiT4e6NsNKOUAawrg-Jg"
+PUB_ID = "2PACX-1vQj4w296kYOOoABSkW-C8hOFo4DQI7DrLj_M5KEAthMTO5x5NOQ0Z_TCVU9uG9IfDCl9LwLx07cCbFc"
 SOURCE_URL = f"https://docs.google.com/spreadsheets/d/{FILE_ID}/edit"
 SHEETS = (
-    "חומרים | Materials",
-    "ערכי חומרים | Material values",
-    "מונחים | Terms",
-    "ערכי מונחים | Term values",
-    "קשרים | Relations",
-    "ערכי קשרים | Relation values",
+    "רישום חומרים | Materials register",
+    "ערכי בחירה לחומרים | Material controlled values",
+    "רישום מונחים | Terms register",
+    "ערכי בחירה למונחים | Term controlled values",
+    "רישום קשרים ושלשות | Relations and triples register",
+    "ערכי בחירה לקשרים | Relation controlled values",
 )
-OPTIONAL_SHEETS = ("מושגים | Concepts", "ערכי מושגים | Concept values")
+OPTIONAL_SHEETS = ("רישום מושגים | Concepts register", "ערכי בחירה למושגים | Controlled concept values")
 DOWNLOAD_URLS = (
-    f"https://drive.google.com/uc?export=download&id={FILE_ID}&confirm=t",
-    f"https://drive.usercontent.google.com/download?id={FILE_ID}&export=download&confirm=t",
+    f"https://docs.google.com/spreadsheets/d/{FILE_ID}/export?format=xlsx",
     f"https://docs.google.com/spreadsheets/d/e/{PUB_ID}/pub?output=xlsx",
 )
 
@@ -80,7 +79,7 @@ def read_register(payload):
         if not any(any(str(cell or "").strip().startswith(("מזהה חומר |", "מזהה מונח |", "מזהה קשר |", "רמת תיעוד |", "סוג תווית |", "סוג צומת |", "מזהה מושג |", "מעמד מושגי |")) for cell in row) for row in rows[:8]):
             raise ValueError(f"No recognized bilingual header row in {name}")
         sheets[name] = rows
-    if not any("TERM-" in str(row) for row in sheets["מונחים | Terms"]):
+    if not any("TERM-" in str(row) for row in sheets["רישום מונחים | Terms register"]):
         raise ValueError("Terms tab has no TERM IDs; refusing to publish an empty register")
     return {"schemaVersion": 1, "sourceUrl": SOURCE_URL,
             "publishedUrl": f"https://docs.google.com/spreadsheets/d/e/{PUB_ID}/pubhtml",
@@ -99,7 +98,7 @@ def main():
     result = read_register(payload)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(result, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
-    print(f"Validated {len(result['sheets'])} tabs from the original Excel workbook; snapshot: {args.output}")
+    print(f"Validated {len(result['sheets'])} tabs from the public Google Sheet; snapshot: {args.output}")
 
 
 if __name__ == "__main__":

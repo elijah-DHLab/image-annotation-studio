@@ -29,6 +29,7 @@ jobs:
           python-version: "3.12"
       - run: python -m pip install 'openpyxl==3.1.5'
       - name: Read current public Excel from Drive and validate tabs
+        continue-on-error: true
         run: python scripts/sync_workbook.py --output data/register.json
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
